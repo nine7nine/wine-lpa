@@ -1,0 +1,19 @@
+--- wine-1.7.23/dlls/kernel32/volume.c.orig	2014-08-01 17:53:13.152833866 -0400
++++ wine-1.7.23/dlls/kernel32/volume.c	2014-08-01 17:57:38.003848051 -0400
+@@ -802,10 +802,12 @@
+             goto done;
+         }
+ 
+-        if (label && label_len) VOLUME_GetSuperblockLabel( &nt_name, handle, type, superblock, label, label_len );
+-        if (serial) *serial = VOLUME_GetSuperblockSerial( &nt_name, handle, type, superblock );
+-        CloseHandle( handle );
+-        goto fill_fs_info;
++        else if (type != FS_UNKNOWN) {
++            if (label && label_len) VOLUME_GetSuperblockLabel( &nt_name, handle, type, superblock, label, label_len );
++            if (serial) *serial = VOLUME_GetSuperblockSerial( &nt_name, handle, type, superblock );
++            CloseHandle( handle );
++            goto fill_fs_info;
++        }
+     }
+     else TRACE( "cannot open device %s: %x\n", debugstr_w(nt_name.Buffer), status );
+ 
