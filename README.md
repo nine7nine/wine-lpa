@@ -1,6 +1,6 @@
 # wine-lpa
 
-Backup for wine-lpa patchwork and archlinuxpkgbuild (and some unused (or borked) patches, not to be applied).
+Backup for wine-lpa patchwork and archlinux pkgbuilds (and some unused (or borked) patches, not to be applied).
 
 Wine is currently (at the time of this writing) at version 1.9.18 and wine-staging has integrated wine-rt and has a form of shared memory in wineserver, so must people would probably tend to use it.
 
