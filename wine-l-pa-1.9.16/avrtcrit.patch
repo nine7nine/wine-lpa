@@ -1,0 +1,12 @@
+diff --git a/dlls/avrt/main.c b/dlls/avrt/main.c
+index 5c9ef4a..9f79e7d 100644
+--- a/dlls/avrt/main.c
++++ b/dlls/avrt/main.c
+@@ -80,6 +82,7 @@
+         SetLastError(ERROR_INVALID_HANDLE);
+         return NULL;
+     }
++    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+     return (HANDLE)0x12345678;
+ }
+ 
