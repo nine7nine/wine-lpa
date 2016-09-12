@@ -30,6 +30,7 @@ source=(http://prdownloads.sourceforge.net/wine/wine-$_pkgbasever.tar.bz2{,.sign
         capitalize-users-directory.patch
         ntdll-Fix-name-validation-for-pipes-bug-28995.patch
         L-defeat-dialog-box.patch
+        0000-revert_increase_mmdevapi_buffer_sizes_this_is_linux_not_mac.patch
         0001-mmdevapi-Prevent-race-condition-upon-Start.patch
         0007-mciseq-Prevent-busy-wait-while-pausing.patch
         0008-mciseq-Pause-causes-an-ABORT-notification.patch
@@ -472,9 +473,9 @@ build() {
   patch -s -Np1 -i $srcdir/00_override_pthreads_to_fix_gstreamer.patch
   msg2 "         SUCCESS :)"
 
-#  msg "Applying 0000-revert_increase_mmdevapi_buffer_sizes_this_is_linux_not_mac.patch"
-#  patch -s -Np1 -i $srcdir/0000-revert_increase_mmdevapi_buffer_sizes_this_is_linux_not_mac.patch
-#  msg2 "         SUCCESS :)"
+  msg "Applying 0000-revert_increase_mmdevapi_buffer_sizes_this_is_linux_not_mac.patch"
+  patch -s -Np1 -i $srcdir/0000-revert_increase_mmdevapi_buffer_sizes_this_is_linux_not_mac.patch
+  msg2 "         SUCCESS :)"
 
 #  msg "Applying immReleaseContext.patch"
 #  patch -s -Np1 -i $srcdir/immReleaseContext.patch
