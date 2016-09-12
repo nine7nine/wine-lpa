@@ -15,6 +15,7 @@ source=(https://dl.winehq.org/wine/source/1.9/wine-$_pkgbasever.tar.bz2
         wine-rt.install
         add-implementation-setProcessWorkingSetSize.patch
         0012-ntdll-Use-pipes-for-synchronization-objects.patch
+        syncfix.patch
         NI-drag-and-drop.patch
         0050-pipe-check-and-thread-safe-read.patch
         set-realtime-priority-without-wineserver.patch
@@ -45,7 +46,7 @@ source=(https://dl.winehq.org/wine/source/1.9/wine-$_pkgbasever.tar.bz2
         0B-msi_check_return_value_of_ITypeLib_GetLibAttr.patch
         update_embedded_window.patch
         shush_gdi_noHDC.patch
-        shL.patch
+        Fix_u-he_plugins-win32_find_data_nogui.patch
         0049-override-serial-number-from-environment.patch
         0056-allow-WINEDLLPATH-override.patch
         winemenubuilder-silence-an-err.patch
@@ -65,7 +66,8 @@ source=(https://dl.winehq.org/wine/source/1.9/wine-$_pkgbasever.tar.bz2
 md5sums=('11a2fc9592609acacd779509e8c7210f'
          'b2e3ba93933f64bd98a3aa8ec64ffcfd'
          '817b81193419ca4b417c8c8f06729b76'
-         '2a425ce6f6bfee374534ef5dda290717'
+         '601f7125a1e5f2f51858ab6e4d31d6f2'
+         '59d2d65a5cded2e554f96921d5a263e0'
          '66ece12c7a746a3ea01f7aca39e98a2a'
          '60b749b08cb95bf0c4ad16c46227f35e'
          'ad6ac39aacc518256823fbf9dc625acf'
@@ -202,6 +204,10 @@ build() {
 
   msg "Applying 0012-ntdll-Use-pipes-for-synchronization.patch"
   patch -s -Np1 -i $srcdir/0012-ntdll-Use-pipes-for-synchronization-objects.patch
+  msg2 "         SUCCESS :)"
+
+  msg "Applying syncfix.patch"
+  patch -s -Np1 -i $srcdir/syncfix.patch
   msg2 "         SUCCESS :)"
 
   msg "Applying set-realtime-priority-without-wineserver.patch"
@@ -348,9 +354,9 @@ build() {
   patch -s -Np1 -i $srcdir/shush_gdi_noHDC.patch
   msg2 "         SUCCESS :)"
 
-#  msg "Applying shL.patch"
-#  patch -s -Np1 -i $srcdir/shL.patch
-#  msg2 "         SUCCESS :)"
+  msg "Applying Fix_u-he_plugins-win32_find_data_nogui.patch"
+  patch -s -Np1 -i $srcdir/Fix_u-he_plugins-win32_find_data_nogui.patch
+  msg2 "         SUCCESS :)"
 
   msg "Applying advapi_silent_delayShutdown.patch"
   patch -s -Np1 -i $srcdir/advapi_silent_delayShutdown.patch

@@ -390,7 +390,7 @@
 +            req->access  = access;
 +            req->initial = InitialCount;
 +            req->max     = MaximumCount;
-+            wine_server_add_data( req, &objattr, sizeof(objattr) );
++            wine_server_add_data( req, objattr, len );
 +            ret = wine_server_call( req );
 +            *SemaphoreHandle = wine_server_ptr_handle( reply->handle );
 +        }
@@ -436,7 +436,7 @@
 +            req->access = DesiredAccess;
 +            req->manual_reset = (type == NotificationEvent);
 +            req->initial_state = InitialState;
-+            wine_server_add_data( req, &objattr, sizeof(objattr) );
++            wine_server_add_data( req, objattr, len );
 +            ret = wine_server_call( req );
 +            *EventHandle = wine_server_ptr_handle( reply->handle );
 +        }
@@ -477,8 +477,8 @@
 +        SERVER_START_REQ( create_mutex )
 +        {
 +            req->access  = access;
-+            req->attributes = (attr) ? attr->Attributes : 0;
 +            req->owned   = InitialOwner;
++            wine_server_add_data( req, objattr, len );
 +            status = wine_server_call( req );
 +            *MutantHandle = wine_server_ptr_handle( reply->handle );
 +        }
