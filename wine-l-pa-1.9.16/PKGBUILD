@@ -7,7 +7,7 @@
 
 pkgname=wine-l-pa
 pkgver=1.9.16
-pkgrel=1
+pkgrel=3
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -54,6 +54,7 @@ source=(https://dl.winehq.org/wine/source/1.9/wine-$_pkgbasever.tar.bz2
         improve-allocation-performance.patch
         more_prios.patch
         avrtcrit.patch
+        avrt2.patch
         Optimize_Dlls.patch
         advapi_silent_delayShutdown.patch
         threadLSPointer.patch
@@ -61,6 +62,13 @@ source=(https://dl.winehq.org/wine/source/1.9/wine-$_pkgbasever.tar.bz2
         fix_GetThreadTimes_for_all_threads.patch
         stdint.patch
         wine-gcc49.patch
+        0001-winepulse.drv-Use-a-separate-mainloop-and-ctx-for-pu.patch 
+        0002-winepulse-expose-audio-devices-directly-to-programs.patch 
+        0003-winepulse-implement-exclusive-mode.patch 
+        0004-winepulse-fix-segfault-in-pulse_rd_loop.patch 
+        0005-winepulse-implement-GetPropValue.patch 
+        0006-winepulse-fetch-actual-program-name-if-possible.patch 
+        0007-winepulse-return-PKEY_AudioEndpoint_PhysicalSpeakers.patch
         0007-mciseq-Prevent-busy-wait-while-pausing.patch
         0008-mciseq-Pause-causes-an-ABORT-notification.patch
         0009-mciseq-Make-sure-MCI_WAIT-waits-for-the-player-to-t.patch
@@ -71,6 +79,15 @@ source=(https://dl.winehq.org/wine/source/1.9/wine-$_pkgbasever.tar.bz2
         0023-mciseq-MCI_PLAY-does-not-reset-the-tempo-to-default.patch
         0024-mciseq-Read-the-tempo-from-the-file-when-opening-it.patch
         0025-mciseq-MCI-tempo-is-expressed-in-beats-per-minute.patch
+        0001-ntdll-Fix-a-bug-when-exception-handling-triggers-sta.patch
+        0001-ntdll-Throw-exception-if-invalid-handle-is-passed-to.patch
+        0001-ntdll-Use-a-separate-stack-when-starting-new-threads.patch
+        0002-ntdll-Ignore-invalid-exit_frame-when-exiting-thread.patch
+        0001-ntdll-Do-not-allow-to-allocate-thread-stack-for-curr.patch
+        0001-ntdll-Ensure-process-dlls-are-not-attached-too-early.patch
+        0001-winedevice-Avoid-invalid-memory-access-when-relocati.patch
+        0001-ntdll-Implement-NtSetLdtEntries.patch
+        0002-libs-wine-Allow-to-modify-reserved-LDT-entries.patch
 )
 
 md5sums=('11a2fc9592609acacd779509e8c7210f'
@@ -116,6 +133,7 @@ md5sums=('11a2fc9592609acacd779509e8c7210f'
          'eb4eb42c1420c45b386a267091a1c48e'
          '4bc859fc2194c6d1cec35cb056e5085d'
          'a0d63fa731760e28e4402788f90a4c67'
+         'a1ed4e41485060526e861d2fbbeb2b1f'
          'ba6896b86ebfc9153aa366346b208bbb'
          '92e78dae6fea343481ce4102b8b589f8'
          'faa5b22d1a58ea4a67400d1dadba3704'
@@ -123,6 +141,13 @@ md5sums=('11a2fc9592609acacd779509e8c7210f'
          '507f9a5818ee03252d43816abd3e7a26'
          '5c072659a8da6d1d7245641bd39b8dbd'
          'ef8b7ba352f86ed3e3621989f7865710'
+         '41aec429fe461d31c8e36f03af6e5e98'
+         '644d6dac8348c43fd074e8f918e26733'
+         '358bea2aec9892e2afa6e953dc6d5856'
+         '2db4fa46baf2ef8bda447958612e3345'
+         '31c95baff2ebd2c65a7487ea320632da'
+         '61755382e52ef1397a10f72ec1c058e0'
+         '255cc207024d12ebcbf3a3ca6de0ed47'
          'ffb62bb5b0c78938673bf3b5587b32af'
          '1236ec750718c2f89c950462f59c1c25'
          '23e19e0d704a12f92c20e0adb76eaa90'
@@ -132,7 +157,16 @@ md5sums=('11a2fc9592609acacd779509e8c7210f'
          '5833bcab85a06e2d947105095d9d50b9'
          '9850a793cf670d2fc1b419a397c9193f'
          'ede42fe52def0c1c926291df9f3f2c05'
-         '71caa3a934735d4f68e28d8ee04a9d37')
+         '71caa3a934735d4f68e28d8ee04a9d37'
+         'dfa8831f25c43a5ff3cb89e90912b89b'
+         '670cf2953172f75e64420ec5b4b16404'
+         '8f3d84184ef6f59a9eab824df6b97da8'
+         'fc5567859171db2d79bb176342e39713'
+         'd27f3a639808bd79d7a59b26e411e0b7'
+         'a3fd8660bf3aa66afe6ae65d1910b459'
+         'd38f9aaa61a22063b3ecc8adc69f160c'
+         'aa3e0f413c3dcc540a2114754bb936b9'
+         '2a4e3c9a5859e3e36ea37e768f0d9ff5')
 
 
 validpgpkeys=('5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7')
@@ -399,6 +433,10 @@ build() {
   patch -s -Np1 -i $srcdir/avrtcrit.patch
   msg2 "         SUCCESS :)"
 
+#  msg "Applying avrt2.patch"
+#  patch -s -Np1 -i $srcdir/avrt2.patch
+#  msg2 "         SUCCESS :)"
+
 #  msg "Applying valgrind-prevent-crash-hack.patch"
 #  patch -s -Np1 -i $srcdir/valgrind-prevent-crash-hack.patch
 #  msg2 "         SUCCESS :)"
@@ -446,6 +484,37 @@ build() {
   msg "Applying wine-gcc49.patch"
   patch -s -Np1 -i $srcdir/wine-gcc49.patch
   msg2 "         SUCCESS :)"
+
+  msg2 "subset of Wine-Staging fixes"
+
+  msg "1"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Fix-a-bug-when-exception-handling-triggers-sta.patch
+  msg "2"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Throw-exception-if-invalid-handle-is-passed-to.patch
+  msg "3"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Use-a-separate-stack-when-starting-new-threads.patch
+  msg "4"
+  patch -s -Np1 -i $srcdir/0002-ntdll-Ignore-invalid-exit_frame-when-exiting-thread.patch
+  msg "5"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Do-not-allow-to-allocate-thread-stack-for-curr.patch
+  msg "6"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Ensure-process-dlls-are-not-attached-too-early.patch
+  msg "7"
+  patch -s -Np1 -i $srcdir/0001-winedevice-Avoid-invalid-memory-access-when-relocati.patch 
+  msg "7"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Implement-NtSetLdtEntries.patch
+  msg "8"
+  patch -s -Np1 -i $srcdir/0002-libs-wine-Allow-to-modify-reserved-LDT-entries.patch
+
+  msg2 "Winepulse WASAPI, pulsaudio devices n fix-ups"
+
+  patch -s -Np1 -i $srcdir/0001-winepulse.drv-Use-a-separate-mainloop-and-ctx-for-pu.patch 
+  patch -s -Np1 -i $srcdir/0002-winepulse-expose-audio-devices-directly-to-programs.patch 
+  patch -s -Np1 -i $srcdir/0003-winepulse-implement-exclusive-mode.patch 
+  patch -s -Np1 -i $srcdir/0004-winepulse-fix-segfault-in-pulse_rd_loop.patch 
+  patch -s -Np1 -i $srcdir/0005-winepulse-implement-GetPropValue.patch 
+  patch -s -Np1 -i $srcdir/0006-winepulse-fetch-actual-program-name-if-possible.patch 
+  patch -s -Np1 -i $srcdir/0007-winepulse-return-PKEY_AudioEndpoint_PhysicalSpeakers.patch
 
   msg "Applying msi_actions_hack.patch"
   patch -s -Np1 -i $srcdir/msi_actions_hack.patch

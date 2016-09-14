@@ -1,0 +1,16 @@
+--- wine/dlls/avrt/main.c.orig	2016-09-12 14:57:29.974892132 -0400
++++ wine/dlls/avrt/main.c	2016-09-13 11:42:08.409000210 -0400
+@@ -87,11 +87,11 @@
+ BOOL WINAPI AvRevertMmThreadCharacteristics(HANDLE AvrtHandle)
+ {
+     FIXME("(%p): stub\n", AvrtHandle);
+-    return TRUE;
++    return 1;
+ }
+ 
+ BOOL WINAPI AvSetMmThreadPriority(HANDLE AvrtHandle, AVRT_PRIORITY prio)
+ {
+     FIXME("(%p)->(%u) stub\n", AvrtHandle, prio);
+-    return TRUE;
++    return 1;
+ }
