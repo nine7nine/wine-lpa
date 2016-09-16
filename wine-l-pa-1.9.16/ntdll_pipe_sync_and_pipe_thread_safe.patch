@@ -1,6 +1,7 @@
---- wine-rt-1.6.1.orig/dlls/advapi32/service.c
-+++ wine-rt-1.6.1/dlls/advapi32/service.c
-@@ -460,6 +460,11 @@
+diff -Nur wine-1.9.16a/dlls/advapi32/service.c wine-1.9.16/dlls/advapi32/service.c
+--- wine-1.9.16a/dlls/advapi32/service.c	2016-09-15 13:14:25.474780604 -0400
++++ wine-1.9.16/dlls/advapi32/service.c	2016-09-15 13:05:06.947050000 -0400
+@@ -513,6 +513,11 @@
      HANDLE wait_handles[MAXIMUM_WAIT_OBJECTS];
      UINT wait_services[MAXIMUM_WAIT_OBJECTS];
      dispatcher_data *disp = heap_alloc( sizeof(*disp) );
@@ -12,7 +13,7 @@
  
      disp->manager = OpenSCManagerW( NULL, NULL, SC_MANAGER_CONNECT );
      if (!disp->manager)
-@@ -479,8 +484,22 @@
+@@ -532,8 +537,22 @@
          return FALSE;
      }
  
@@ -20,7 +21,7 @@
 -    stop_event = CreateEventW( NULL, FALSE, FALSE, NULL );
 +    // Hash the name to avoid collisions between services.exe and rm-host.exe
 +    gettimeofday(&tv, 0);
-+    seed = (unsigned int)(intptr_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
++    seed = (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 +    while (*hashLoc != 0) {
 +        hashNum = (rand_r(&seed) >> 16) % 62;
 +        if (hashNum < 10)
@@ -37,9 +38,10 @@
  
      /* FIXME: service_control_dispatcher should be merged into the main thread */
      wait_handles[0] = __wine_make_process_system();
---- wine-rt-1.6.1.orig/dlls/ntdll/heap.c
-+++ wine-rt-1.6.1/dlls/ntdll/heap.c
-@@ -44,6 +44,7 @@
+diff -Nur wine-1.9.16a/dlls/ntdll/heap.c wine-1.9.16/dlls/ntdll/heap.c
+--- wine-1.9.16a/dlls/ntdll/heap.c	2016-09-15 13:14:25.468113807 -0400
++++ wine-1.9.16/dlls/ntdll/heap.c	2016-09-15 12:30:00.238435000 -0400
+@@ -43,6 +43,7 @@
  #include "wine/list.h"
  #include "wine/debug.h"
  #include "wine/server.h"
@@ -47,7 +49,7 @@
  
  WINE_DEFAULT_DEBUG_CHANNEL(heap);
  
-@@ -177,6 +178,8 @@ static HEAP *processHeap;  /* main proce
+@@ -177,6 +178,8 @@
  
  static BOOL HEAP_IsRealArena( HEAP *heapPtr, DWORD flags, LPCVOID block, BOOL quiet );
  
@@ -56,7 +58,7 @@
  /* mark a block of memory as free for debugging purposes */
  static inline void mark_block_free( void *ptr, SIZE_T size, DWORD flags )
  {
-@@ -1564,6 +1567,11 @@ HANDLE WINAPI RtlCreateHeap( ULONG flags
+@@ -1580,6 +1583,11 @@
      }
      else if (!addr)
      {
@@ -68,9 +70,10 @@
          processHeap = subheap->heap;  /* assume the first heap we create is the process main heap */
          list_init( &processHeap->entry );
      }
---- wine-rt-1.6.1.orig/dlls/ntdll/ntdll_misc.h
-+++ wine-rt-1.6.1/dlls/ntdll/ntdll_misc.h
-@@ -185,6 +185,22 @@ extern int ntdll_wcstoumbs(DWORD flags,
+diff -Nur wine-1.9.16a/dlls/ntdll/ntdll_misc.h wine-1.9.16/dlls/ntdll/ntdll_misc.h
+--- wine-1.9.16a/dlls/ntdll/ntdll_misc.h	2016-09-15 13:14:25.491447598 -0400
++++ wine-1.9.16/dlls/ntdll/ntdll_misc.h	2016-09-15 12:30:00.251768000 -0400
+@@ -193,6 +193,22 @@
  extern int CDECL NTDLL__vsnprintf( char *str, SIZE_T len, const char *format, __ms_va_list args ) DECLSPEC_HIDDEN;
  extern int CDECL NTDLL__vsnwprintf( WCHAR *str, SIZE_T len, const WCHAR *format, __ms_va_list args ) DECLSPEC_HIDDEN;
  
@@ -93,9 +96,10 @@
  /* load order */
  
  enum loadorder
---- wine-rt-1.6.1.orig/dlls/ntdll/om.c
-+++ wine-rt-1.6.1/dlls/ntdll/om.c
-@@ -373,6 +373,9 @@ NTSTATUS close_handle( HANDLE handle )
+diff -Nur wine-1.9.16a/dlls/ntdll/om.c wine-1.9.16/dlls/ntdll/om.c
+--- wine-1.9.16a/dlls/ntdll/om.c	2016-09-15 13:14:25.484780800 -0400
++++ wine-1.9.16/dlls/ntdll/om.c	2016-09-15 12:30:00.248435000 -0400
+@@ -434,6 +434,9 @@
   */
  NTSTATUS WINAPI NtClose( HANDLE Handle )
  {
@@ -105,8 +109,9 @@
      return close_handle( Handle );
  }
  
---- wine-rt-1.6.1.orig/dlls/ntdll/sync.c
-+++ wine-rt-1.6.1/dlls/ntdll/sync.c
+diff -Nur wine-1.9.16a/dlls/ntdll/sync.c wine-1.9.16/dlls/ntdll/sync.c
+--- wine-1.9.16a/dlls/ntdll/sync.c	2016-08-05 17:05:46.000000000 -0400
++++ wine-1.9.16/dlls/ntdll/sync.c	2016-09-15 12:30:00.205101000 -0400
 @@ -47,6 +47,8 @@
  #include <stdio.h>
  #include <stdlib.h>
@@ -116,11 +121,13 @@
  
  #include "ntstatus.h"
  #define WIN32_NO_STATUS
-@@ -166,6 +168,244 @@
+@@ -166,6 +168,288 @@
      return STATUS_SUCCESS;
  }
  
-+#define is_pipe_object(h) (h != INVALID_HANDLE_VALUE && HIWORD(h) != 0)
++/* -1 "check environment", 0 "don't use them", 1 "do use them" */
++static int s_usePipeObjects = -1;
++#define is_pipe_object(h) (s_usePipeObjects == 1 && h != INVALID_HANDLE_VALUE && HIWORD(h) != 0)
 +#define is_pipe_event(h) (is_pipe_object(h) && ((LPPIPEOBJ)h)->wMagic == EVENT_MAGIC)
 +#define is_pipe_semaphore(h) (is_pipe_object(h) && ((LPPIPEOBJ)h)->wMagic == SEMAPHORE_MAGIC)
 +#define is_pipe_mutex(h) (is_pipe_object(h) && ((LPPIPEOBJ)h)->wMagic == MUTEX_MAGIC)
@@ -142,13 +149,12 @@
 + */
 +BOOL use_pipe_objects(void)
 +{
-+    static const char* s_enable_pipe_sync = 0;
-+    if (s_enable_pipe_sync == 0) {
++    if (s_usePipeObjects == -1) {
 +        const char* env;
 +        extern int __wine_main_argc;
 +        extern char** __wine_main_argv;
 +
-+        s_enable_pipe_sync = "0";
++        s_usePipeObjects = 0;
 +        env = getenv("L_ENABLE_PIPE_SYNC_FOR_APP");
 +        if (env) {
 +            /* note: PEB command line is not available when this is first called so use main args */
@@ -156,11 +162,11 @@
 +                ERR("bad __wine_main_argc: %d\n", __wine_main_argc);
 +            else if (strstr(__wine_main_argv[1], env) != 0) {
 +                MESSAGE("Honoring L_ENABLE_PIPE_SYNC_FOR_APP: %s (%s)\n", env, __wine_main_argv[1]);
-+                s_enable_pipe_sync = "1";
++                s_usePipeObjects = 1;
 +            }
 +        }
 +    }
-+    return(*s_enable_pipe_sync != '0');
++    return(s_usePipeObjects == 1);
 +}
 +
 +/******************************************************************************
@@ -237,42 +243,85 @@
 + */
 +static NTSTATUS wait_for_pipe_object(LPPIPEOBJ pobj, const LARGE_INTEGER *timeout, int clear)
 +{
-+    char c;
-+    NTSTATUS ret;
-+    struct pollfd pfd;
-+    int tm;
++     char c;
++     NTSTATUS ret;
++     struct pollfd pfd;
++     int tm;   /* ms */
++     int tmAlready;
++     int readret;
++     struct timeval tv;
++     LONGLONG start; /* usecs */
 +
-+    pfd.fd = pobj->fd[0];
-+    pfd.events = POLLIN;
-+    pfd.revents = 0;
++     pfd.fd = pobj->fd[0];
++     pfd.events = POLLIN;
++     pfd.revents = 0;
 +
-+    if (!timeout)
-+        tm = -1;
-+    else
-+        tm = (-timeout->QuadPart) / (ULONGLONG)10000;
++     /* Remember that this is initially in get_nt_timeout format 
++(*-10000) */
++     if (!timeout)
++         tm = -1;
++     else
++         tm = (-timeout->QuadPart) / (ULONGLONG)10000;
 +
-+    TRACE("%p timeout=%d\n", pobj, tm);
++     TRACE("pobj=%p timeout=%d\n", pobj, tm);
 +
-+    if (poll(&pfd, 1, tm) == -1)
-+        ret = WAIT_FAILED;
-+    else if (pfd.revents & POLLIN)
-+    {
-+        ret = WAIT_OBJECT_0;
++     gettimeofday(&tv, 0);
++     start = (LONGLONG) tv.tv_sec * 1000000LL + (LONGLONG) tv.tv_usec;
++     tmAlready = 0;
 +
-+        TRACE("pipe object signaled before time out\n");
-+        if (clear)
-+        {
-+            if (read(pobj->fd[0], &c, 1) != 1) /* Clear the signal */
-+            {
-+                ERR("Failed to clear pipe object\n");
-+                ret = WAIT_FAILED;
-+            }
-+        }
-+    }
-+    else
-+    {
-+        TRACE("pipe object timed out\n");
-+        ret = WAIT_TIMEOUT;
++     while (1)
++     {
++         if (poll(&pfd, 1, tm - tmAlready) == -1) {
++             ret = WAIT_FAILED;
++         }
++         else if (pfd.revents & POLLIN)
++         {
++             ret = WAIT_OBJECT_0;
++
++             TRACE("Pipe sync object: Signaled before time out\n");
++             if (clear)
++             {
++                 /* Clear the signal */
++                 readret = read(pobj->fd[0], &c, 1);
++                 if (readret == -1 && errno == EAGAIN)
++                 {
++                     TRACE("Pipe sync object: Erroneous read; retrying\n");
++                     if (!timeout)
++                         continue;
++                     else
++                     {
++                         LONGLONG usecs;
++
++                         /* Adjust time elapsed */
++                         gettimeofday(&tv, 0);
++                         usecs = (LONGLONG) tv.tv_sec * 1000000LL 
++                                 + (LONGLONG) tv.tv_usec;
++                         tmAlready = (usecs - start) / 1000;
++                         if (tmAlready < tm)
++                             continue;
++                         else
++                         {
++                             TRACE("Pipe sync object: Timed out\n");
++                             ret = WAIT_TIMEOUT;
++                         }
++                     }
++                 }
++                 else if (readret != 1)
++                 {
++                     ERR("Failed to clear pipe sync object\n");
++                     ret = WAIT_FAILED;
++                 }
++             }
++         }
++         else
++         {
++             ret = WAIT_TIMEOUT;
++             TRACE("Pipe sync object timed out\n");
++         }
++
++         /* always break except when a thread loses the race */
++         /* between poll() and read() */
++         break;
 +    }
 +
 +    return ret;
@@ -361,7 +410,7 @@
  /*
   *	Semaphores
   */
-@@ -183,21 +423,30 @@
+@@ -183,21 +467,30 @@
      data_size_t len;
      struct object_attributes *objattr;
  
@@ -400,7 +449,7 @@
  
      RtlFreeHeap( GetProcessHeap(), 0, objattr );
      return ret;
-@@ -266,6 +515,12 @@
+@@ -266,6 +559,12 @@
  NTSTATUS WINAPI NtReleaseSemaphore( HANDLE handle, ULONG count, PULONG previous )
  {
      NTSTATUS ret;
@@ -413,7 +462,7 @@
      SERVER_START_REQ( release_semaphore )
      {
          req->handle = wine_server_obj_handle( handle );
-@@ -296,16 +551,24 @@
+@@ -296,16 +595,24 @@
  
      if ((ret = alloc_object_attributes( attr, &objattr, &len ))) return ret;
  
@@ -446,7 +495,7 @@
  
      RtlFreeHeap( GetProcessHeap(), 0, objattr );
      return ret;
-@@ -344,6 +607,11 @@
+@@ -344,6 +651,11 @@
  {
      NTSTATUS ret;
  
@@ -458,18 +507,18 @@
      /* FIXME: set NumberOfThreadsReleased */
  
      SERVER_START_REQ( event_op )
-@@ -464,15 +732,27 @@
+@@ -464,15 +776,22 @@
  
      if ((status = alloc_object_attributes( attr, &objattr, &len ))) return status;
  
 -    SERVER_START_REQ( create_mutex )
 +    if (!len && use_pipe_objects())
      {
-         req->access  = access;
-         req->owned   = InitialOwner;
-         wine_server_add_data( req, objattr, len );
-         status = wine_server_call( req );
-         *MutantHandle = wine_server_ptr_handle( reply->handle );
+-        req->access  = access;
+-        req->owned   = InitialOwner;
+-        wine_server_add_data( req, objattr, len );
+-        status = wine_server_call( req );
+-        *MutantHandle = wine_server_ptr_handle( reply->handle );
 +        status = create_pipe_object(MutantHandle, MUTEX_MAGIC, !InitialOwner);
 +    }
 +    else
@@ -488,7 +537,7 @@
  
      RtlFreeHeap( GetProcessHeap(), 0, objattr );
      return status;
-@@ -510,6 +790,11 @@
+@@ -510,6 +829,11 @@
  {
      NTSTATUS    status;
  
@@ -500,14 +549,14 @@
      SERVER_START_REQ( release_mutex )
      {
          req->handle = wine_server_obj_handle( handle );
-@@ -998,7 +1283,22 @@
+@@ -998,7 +1322,22 @@
  {
      select_op_t select_op;
      UINT i, flags = SELECT_INTERRUPTIBLE;
 +    int j;
-+
-+    TRACE("count=%ld handles=%p wait_any=%d alertable=%d timeout=%p %lld\n", count, handles, wait_any, alertable, timeout, timeout ? timeout->QuadPart : -1);
  
++    TRACE("count=%ld handles=%p wait_any=%d alertable=%d timeout=%p %lld\n", count, handles, wait_any, alertable, timeout, timeout ? timeout->QuadPart : -1);
++
 +    if (count == 1 && is_pipe_object(handles[0]))
 +        return wait_for_pipe_object((LPPIPEOBJ)*handles, timeout, 1);
 +    for (j = 0; j < count; ++j) {
@@ -523,9 +572,10 @@
      if (!count || count > MAXIMUM_WAIT_OBJECTS) return STATUS_INVALID_PARAMETER_1;
  
      if (alertable) flags |= SELECT_ALERTABLE;
---- wine-rt-1.6.1.orig/dlls/rpcrt4/rpc_transport.c
-+++ wine-rt-1.6.1/dlls/rpcrt4/rpc_transport.c
-@@ -637,9 +637,30 @@ typedef struct _RpcServerProtseq_np
+diff -Nur wine-1.9.16a/dlls/rpcrt4/rpc_transport.c wine-1.9.16/dlls/rpcrt4/rpc_transport.c
+--- wine-1.9.16a/dlls/rpcrt4/rpc_transport.c	2016-08-05 17:05:46.000000000 -0400
++++ wine-1.9.16/dlls/rpcrt4/rpc_transport.c	2016-09-15 12:30:00.198434000 -0400
+@@ -672,9 +672,30 @@
  
  static RpcServerProtseq *rpcrt4_protseq_np_alloc(void)
  {
@@ -538,7 +588,7 @@
 +
 +    // Hash the name to avoid collisions between services.exe and rm-host.exe
 +    gettimeofday(&tv, 0);
-+    seed = (unsigned int)(intptr_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
++    seed = (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 +    while (*hashLoc != 0) {
 +        hashNum = (rand_r(&seed) >> 16) % 62;
 +        if (hashNum < 10)
@@ -557,9 +607,10 @@
      return &ps->common;
  }
  
---- wine-rt-1.6.1.orig/programs/winedevice/device.c
-+++ wine-rt-1.6.1/programs/winedevice/device.c
-@@ -326,10 +326,11 @@
+diff -Nur wine-1.9.16a/programs/winedevice/device.c wine-1.9.16/programs/winedevice/device.c
+--- wine-1.9.16a/programs/winedevice/device.c	2016-09-15 13:14:25.494780996 -0400
++++ wine-1.9.16/programs/winedevice/device.c	2016-09-15 12:30:00.255102000 -0400
+@@ -363,10 +363,11 @@
  {
      SERVICE_STATUS status;
      const WCHAR *driver_name = argv[0];
@@ -572,4 +623,3 @@
  
      service_handle = RegisterServiceCtrlHandlerExW( driver_name, service_handler, (void *)driver_name );
      if (!service_handle)
-

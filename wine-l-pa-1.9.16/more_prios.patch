@@ -27,13 +27,13 @@
      switch (priority)
      {
 +      case hiTHREAD_PRIORITY_TIME_CRITICAL:
-+        param.sched_priority = base_rt_priority + 14;
++        param.sched_priority = base_rt_priority + 34;
 +        policy = SCHED_FIFO;
 +        fprintf( stderr, "Thread %i at hiTHREAD_PRIORITY_TIME_CRITICAL set to SCHED_FIFO - priority %i\n", thread->unix_tid, param.sched_priority );
 +        break;
        case THREAD_PRIORITY_TIME_CRITICAL:
 -        param.sched_priority = base_rt_priority + 10;
-+        param.sched_priority = base_rt_priority + 12;
++        param.sched_priority = base_rt_priority + 15;
          policy = SCHED_FIFO;
          fprintf( stderr, "Thread %i at THREAD_PRIORITY_TIME_CRITICAL set to SCHED_FIFO - priority %i\n", thread->unix_tid, param.sched_priority );
          break;

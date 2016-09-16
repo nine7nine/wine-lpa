@@ -7,15 +7,13 @@
 
 pkgname=wine-l-pa
 pkgver=1.9.16
-pkgrel=3
+pkgrel=6
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(https://dl.winehq.org/wine/source/1.9/wine-$_pkgbasever.tar.bz2
         wine-rt.install
         add-implementation-setProcessWorkingSetSize.patch
-        0012-ntdll-Use-pipes-for-synchronization-objects.patch
-        syncfix.patch
         NI-drag-and-drop.patch
         0050-pipe-check-and-thread-safe-read.patch
         set-realtime-priority-without-wineserver.patch
@@ -88,13 +86,48 @@ source=(https://dl.winehq.org/wine/source/1.9/wine-$_pkgbasever.tar.bz2
         0001-winedevice-Avoid-invalid-memory-access-when-relocati.patch
         0001-ntdll-Implement-NtSetLdtEntries.patch
         0002-libs-wine-Allow-to-modify-reserved-LDT-entries.patch
+        0001-dsound-Pretend-that-our-driver-is-certified.patch
+        0001-dsound-Add-a-linear-resampler-for-use-with-a-large-n.patch
+        0001-hal-Implement-KeQueryPerformanceCounter.patch
+        0001-kernel32-Add-support-for-progress-callback-in-CopyFi.patch
+        0001-kernel32-Strip-invalid-characters-from-mask-in-FindF.patch
+        0002-kernel32-tests-Add-tests-for-FindFirstFileA-with-inv.patch
+        0001-kernel32-Fill-stack-with-meaningful-values-in-call_p.patch
+        0001-msvcrt-Calculate-sinh-cosh-exp-pow-with-higher-preci.patch
+        0001-ntdll-Reuse-old-async-fileio-structures-if-possible.patch
+        0001-ntdll-Process-APC-calls-before-starting-process.patch
+        0001-ntdll-Reserve-some-more-stack-space-in-call_thread_f.patch
+        0001-ntdll-Block-signals-while-executing-system-APCs.patch
+        0001-ntoskrnl.exe-add-KeWaitForMultipleObjects-stub.patch
+        0003-ntoskrnl.exe-Add-stubs-for-ExAcquireFastMutexUnsafe-.patch
+        0004-ntoskrnl.exe-Add-stubs-for-ObReferenceObjectByPointe.patch
+        0005-ntoskrnl.exe-Improve-KeReleaseMutex-stub.patch
+        0006-ntoskrnl.exe-Improve-KeInitializeSemaphore-stub.patch
+        0007-ntoskrnl.exe-Improve-KeInitializeTimerEx-stub.patch
+        0008-ntoskrnl.exe-Fix-IoReleaseCancelSpinLock-argument.patch
+        0009-ntoskrnl.exe-Implement-MmMapLockedPages-and-MmUnmapL.patch
+        0010-ntoskrnl.exe-Implement-KeInitializeMutex.patch
+        0011-ntoskrnl.exe-Add-IoGetDeviceAttachmentBaseRef-stub.patch
+        0012-ntoskrnl.exe-Add-IoStopTimer-stub.patch
+        0001-msvcrt-Calculate-sinh-cosh-exp-pow-with-higher-preci.patch
+        0001-ntdll-Reduce-stack-usage-by-storing-sigset-in-static.patch
+        0002-ntdll-Save-stack-in-NtAllocateVirtualMemory-by-movin.patch
+        0001-ntdll-Implement-virtual_map_shared_memory.patch
+        0002-server-Implement-support-for-global-and-local-shared.patch
+        0003-user32-Get-rid-of-wineserver-call-for-GetInputState.patch
+        0004-user32-Avoid-unnecessary-wineserver-calls-in-PeekMes.patch
+        0005-user32-Get-rid-of-wineserver-call-for-GetLastInputIn.patch
+        0006-ntdll-Only-enable-wineserver-shared-memory-communica.patch
+        0007-server-Store-a-list-of-associated-queues-for-each-th.patch
+        0008-user32-Get-rid-of-wineserver-call-for-GetActiveWindo.patch
+        0009-user32-Cache-the-result-of-GetForegroundWindow.patch
+        winepulse_16channel-7.1surround_hack.patch
+        ntdll_pipe_sync_and_pipe_thread_safe.patch
 )
 
 md5sums=('11a2fc9592609acacd779509e8c7210f'
          'b2e3ba93933f64bd98a3aa8ec64ffcfd'
          '817b81193419ca4b417c8c8f06729b76'
-         '601f7125a1e5f2f51858ab6e4d31d6f2'
-         '59d2d65a5cded2e554f96921d5a263e0'
          '66ece12c7a746a3ea01f7aca39e98a2a'
          '60b749b08cb95bf0c4ad16c46227f35e'
          'ad6ac39aacc518256823fbf9dc625acf'
@@ -131,7 +164,7 @@ md5sums=('11a2fc9592609acacd779509e8c7210f'
          'f1e80e572bb48563994e5d9ca488807e'
          'fcfd83a0ecb10489299d01d9e32f9d8a'
          'eb4eb42c1420c45b386a267091a1c48e'
-         '4bc859fc2194c6d1cec35cb056e5085d'
+         '5976eca1eb72ca1d609d09c0ad17ae07'
          'a0d63fa731760e28e4402788f90a4c67'
          'a1ed4e41485060526e861d2fbbeb2b1f'
          'ba6896b86ebfc9153aa366346b208bbb'
@@ -166,7 +199,44 @@ md5sums=('11a2fc9592609acacd779509e8c7210f'
          'a3fd8660bf3aa66afe6ae65d1910b459'
          'd38f9aaa61a22063b3ecc8adc69f160c'
          'aa3e0f413c3dcc540a2114754bb936b9'
-         '2a4e3c9a5859e3e36ea37e768f0d9ff5')
+         '2a4e3c9a5859e3e36ea37e768f0d9ff5'
+         '24c148438b928248ef8cb26506c81c9b'
+         'a86b57cfe1895e46d096ca0b12d34dda'
+         '39ccb1bbf3be916aff9ba34f210375a6'
+         '87ba7fd750d1b9a39c7a35b4b117ad25'
+         '0f016592d84713215a875112a79c9417'
+         '2461b6a633edccc01270c86228ecb7cc'
+         'd2048efb3007470b6a827b2191c7f1f0'
+         'a334c97cfdd31b2017bd577a7e239660'
+         'f3b3732f1ce675e8c6bc2733537f408d'
+         '2f583f770c45cecdfcd8779212af6c60'
+         '99bcec20b18129d7d802c0d73fef6cf3'
+         '372780ac55c2430e0fb3098e2c6ac6ee'
+         '9b238975a87fd7da41393e190df1eb47'
+         'eceb417f3e95f52e57a48ee3b6d2cc94'
+         '5219ba79b1d1aa6ad96a15059d75fd96'
+         'de26fcdda2c064f0cf4389a4eff64b2c'
+         'eec2edf75d15947dc3432e2dd0d1daa1'
+         'e904ecb303ef93ddbe9e1a11d86aa24e'
+         'a998c6afb68eb56d95c49685af84a0ed'
+         'de9fb7d45a9dd656a1b8a1866a3441bd'
+         '72de807ab2fd92c2870ce4d32728f8dc'
+         '51e30b4762f7d95f92abfc902a0dc25a'
+         '0e0bbfbc75d9e89ce3d1f3d71c3a8373'
+         'a334c97cfdd31b2017bd577a7e239660'
+         '51ae6222e46fc05b2ebb85a8d86a660a'
+         'e74ef3c7665739ae18e44c4abfdedd9b'
+         '7fb37d4b55d2a0a9aeb103b700374179'
+         '46fa0ae6b23887e77c46b78b54874e9a'
+         '63da3ff5919c8edfba4e0f5c94121234'
+         '838cb1e312b6637c683f53d98a557fc4'
+         'c17e3ca0b3a76699c5dc4fce0e1f27e2'
+         'a537c3f02d53ad456747eaee321caaea'
+         '26e55a61e4b84e064c6f29e63d6dd8d8'
+         'a1e0354abbefb3c00209c3552b1f42a9'
+         '988be6ba07602596c0ce015821795723'
+         '7b41f951f7a35830972f6b497e5355e4'
+         '95956fadf9d09eae785c244ffcc9e6d3')
 
 
 validpgpkeys=('5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7')
@@ -256,20 +326,26 @@ build() {
 # You absolutely need these patches for L_Pa-Wine to actually be useful ;)
 #
 
-  msg "Applying 0012-ntdll-Use-pipes-for-synchronization.patch"
-  patch -s -Np1 -i $srcdir/0012-ntdll-Use-pipes-for-synchronization-objects.patch
-  msg2 "         SUCCESS :)"
+#  msg "Applying 0012-ntdll-Use-pipes-for-synchronization.patch"
+#  patch -s -Np1 -i $srcdir/0012-ntdll-Use-pipes-for-synchronization-objects.patch
+#  msg2 "         SUCCESS :)"
 
-  msg "Applying syncfix.patch"
-  patch -s -Np1 -i $srcdir/syncfix.patch
+#  msg "Applying syncfix.patch"
+#  patch -s -Np1 -i $srcdir/syncfix.patch
+#  msg2 "         SUCCESS :)"
+
+#  msg "Applying 0050-pipe-thread-safe.patch"
+#  patch -s -Np1 -i $srcdir/0050-pipe-check-and-thread-safe-read.patch
+#  msg2 "         SUCCESS :)"
+
+# rebase and combine the above patches
+
+  msg "Applying ntdll_pipe_sync_and_pipe_thread_safe.patch"
+  patch -s -Np1 -i $srcdir/ntdll_pipe_sync_and_pipe_thread_safe.patch
   msg2 "         SUCCESS :)"
 
   msg "Applying set-realtime-priority-without-wineserver.patch"
   patch -s -Np1 -i $srcdir/set-realtime-priority-without-wineserver.patch
-  msg2 "         SUCCESS :)"
-
-  msg "Applying 0050-pipe-thread-safe.patch"
-  patch -s -Np1 -i $srcdir/0050-pipe-check-and-thread-safe-read.patch
   msg2 "         SUCCESS :)"
 
   msg "Applying disable-wine-prefix-update-window.patch"
@@ -433,10 +509,6 @@ build() {
   patch -s -Np1 -i $srcdir/avrtcrit.patch
   msg2 "         SUCCESS :)"
 
-#  msg "Applying avrt2.patch"
-#  patch -s -Np1 -i $srcdir/avrt2.patch
-#  msg2 "         SUCCESS :)"
-
 #  msg "Applying valgrind-prevent-crash-hack.patch"
 #  patch -s -Np1 -i $srcdir/valgrind-prevent-crash-hack.patch
 #  msg2 "         SUCCESS :)"
@@ -505,6 +577,81 @@ build() {
   patch -s -Np1 -i $srcdir/0001-ntdll-Implement-NtSetLdtEntries.patch
   msg "8"
   patch -s -Np1 -i $srcdir/0002-libs-wine-Allow-to-modify-reserved-LDT-entries.patch
+  msg "9"
+  patch -s -Np1 -i $srcdir/0001-dsound-Pretend-that-our-driver-is-certified.patch
+  msg "10"
+  patch -s -Np1 -i $srcdir/0001-dsound-Add-a-linear-resampler-for-use-with-a-large-n.patch
+  msg "11"
+  patch -s -Np1 -i $srcdir/0001-hal-Implement-KeQueryPerformanceCounter.patch
+  msg "12"
+  patch -s -Np1 -i $srcdir/0001-kernel32-Add-support-for-progress-callback-in-CopyFi.patch
+  msg "13"
+  patch -s -Np1 -i $srcdir/0001-kernel32-Strip-invalid-characters-from-mask-in-FindF.patch
+  msg "14"
+  patch -s -Np1 -i $srcdir/0002-kernel32-tests-Add-tests-for-FindFirstFileA-with-inv.patch
+  msg "15"
+  patch -s -Np1 -i $srcdir/0001-kernel32-Fill-stack-with-meaningful-values-in-call_p.patch
+  msg "16"
+  patch -s -Np1 -i $srcdir/0001-msvcrt-Calculate-sinh-cosh-exp-pow-with-higher-preci.patch
+  msg "17"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Reuse-old-async-fileio-structures-if-possible.patch
+  msg "18"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Process-APC-calls-before-starting-process.patch
+  msg "19"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Reserve-some-more-stack-space-in-call_thread_f.patch
+  msg "20"
+  patch -s -Np1 -i $srcdir/0001-ntdll-Block-signals-while-executing-system-APCs.patch
+  msg "21"
+  patch -s -Np1 -i $srcdir/0001-ntoskrnl.exe-add-KeWaitForMultipleObjects-stub.patch
+  msg "22"
+  patch -s -Np1 -i $srcdir/0003-ntoskrnl.exe-Add-stubs-for-ExAcquireFastMutexUnsafe-.patch
+#  msg "23"
+#  patch -s -Np1 -i $srcdir/0004-ntoskrnl.exe-Add-stubs-for-ObReferenceObjectByPointe.patch
+  msg "24"
+  patch -s -Np1 -i $srcdir/0005-ntoskrnl.exe-Improve-KeReleaseMutex-stub.patch
+  msg "25"
+  patch -s -Np1 -i $srcdir/0006-ntoskrnl.exe-Improve-KeInitializeSemaphore-stub.patch
+  msg "26"
+  patch -s -Np1 -i $srcdir/0007-ntoskrnl.exe-Improve-KeInitializeTimerEx-stub.patch
+  msg "27"
+  patch -s -Np1 -i $srcdir/0008-ntoskrnl.exe-Fix-IoReleaseCancelSpinLock-argument.patch
+  msg "28"
+  patch -s -Np1 -i $srcdir/0009-ntoskrnl.exe-Implement-MmMapLockedPages-and-MmUnmapL.patch
+  msg "29"
+  patch -s -Np1 -i $srcdir/0010-ntoskrnl.exe-Implement-KeInitializeMutex.patch
+  msg "30"
+  patch -s -Np1 -i $srcdir/0011-ntoskrnl.exe-Add-IoGetDeviceAttachmentBaseRef-stub.patch
+  msg "31"
+  patch -s -Np1 -i $srcdir/0012-ntoskrnl.exe-Add-IoStopTimer-stub.patch
+
+###
+
+#  msg "32"
+#  patch -s -Np1 -i $srcdir/0001-ntdll-Reduce-stack-usage-by-storing-sigset-in-static.patch
+#  msg "33"
+#  patch -s -Np1 -i $srcdir/0002-ntdll-Save-stack-in-NtAllocateVirtualMemory-by-movin.patch
+
+### Shared memory in wineserver
+
+#  msg "A"
+#  patch -s -Np1 -i $srcdir/0001-ntdll-Implement-virtual_map_shared_memory.patch
+#  msg "B"
+#  patch -s -Np1 -i $srcdir/0002-server-Implement-support-for-global-and-local-shared.patch
+#  msg "C"
+#  patch -s -Np1 -i $srcdir/0003-user32-Get-rid-of-wineserver-call-for-GetInputState.patch
+#  msg "D"
+#  patch -s -Np1 -i $srcdir/0004-user32-Avoid-unnecessary-wineserver-calls-in-PeekMes.patch
+#  msg "E"
+#  patch -s -Np1 -i $srcdir/0005-user32-Get-rid-of-wineserver-call-for-GetLastInputIn.patch
+#  msg "F"
+#  patch -s -Np1 -i $srcdir/0006-ntdll-Only-enable-wineserver-shared-memory-communica.patch
+#  msg "G"
+#  patch -s -Np1 -i $srcdir/0007-server-Store-a-list-of-associated-queues-for-each-th.patch
+#  msg "H"
+#  patch -s -Np1 -i $srcdir/0008-user32-Get-rid-of-wineserver-call-for-GetActiveWindo.patch
+#  msg "I"
+#  patch -s -Np1 -i $srcdir/0009-user32-Cache-the-result-of-GetForegroundWindow.patch
+
 
   msg2 "Winepulse WASAPI, pulsaudio devices n fix-ups"
 
@@ -515,6 +662,8 @@ build() {
   patch -s -Np1 -i $srcdir/0005-winepulse-implement-GetPropValue.patch 
   patch -s -Np1 -i $srcdir/0006-winepulse-fetch-actual-program-name-if-possible.patch 
   patch -s -Np1 -i $srcdir/0007-winepulse-return-PKEY_AudioEndpoint_PhysicalSpeakers.patch
+
+  patch -s -Np1 -i $srcdir/winepulse_16channel-7.1surround_hack.patch
 
   msg "Applying msi_actions_hack.patch"
   patch -s -Np1 -i $srcdir/msi_actions_hack.patch

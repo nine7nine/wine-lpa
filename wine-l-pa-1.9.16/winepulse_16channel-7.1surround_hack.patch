@@ -1,0 +1,43 @@
+This is a hack to allow 16 audio channel ouput in Wine... this can allow me to use Pulseaudio + jack-sink/source, routing 
+jackd applications in and out of wine, without needing WineASIO. For example, I can route 16 channels from 
+Reaper (in Wine/winepulse driver) into Ardour5 (linux/jackd).
+
+For this to work well, you have to be using a patched version of wine, like wine-staging/wine-rt. Pulseaudio also has to be 
+configured to handle this sort of application/usage. For the bare miniimum to have 16 channels exposed to pulseaudio/jack from wine; 
+
+Pulseaudio/jack must be configured correctly to use it in /etc/pulse/default.pa
+
+# jack-source
+
+load-module module-jack-source channels=16 channel_map=front-left,front-right,side-left,side-right,rear-left,rear-right,lfe,front-center,top-center,rear-center,top-rear-left,top-rear-right,top-front-left,top-front-right,front-left-of-center,front-right-of-center
+
+# jack-sink
+
+load-module module-jack-sink channels=16 channel_map=front-left,front-right,side-left,side-right,rear-left,rear-right,lfe,front-center,top-center,rear-center,top-rear-left,top-rear-right,top-front-left,top-front-right,front-left-of-center,front-right-of-center
+
+Ideally, I'd like for wine/winepulse to be able to handle auxillary ports, rather athan abusing speaker_configurations 
+already present in wine, in order to get 16 channels of audio.
+
+--- wine/dlls/winepulse.drv/mmdevdrv.c.orig	2016-09-15 15:25:14.934709000 -0400
++++ wine/dlls/winepulse.drv/mmdevdrv.c	2016-09-15 19:11:25.469434037 -0400
+@@ -1499,6 +1506,8 @@
+         return KSAUDIO_SPEAKER_5POINT1 | SPEAKER_BACK_CENTER;
+     case 8:
+         return KSAUDIO_SPEAKER_7POINT1_SURROUND; /* Vista deprecates 7POINT1 */
++    case 16:
++        return KSAUDIO_SPEAKER_7POINT1_SURROUND; /* Vista deprecates 7POINT1 */
+     }
+     FIXME("Unknown speaker configuration: %u\n", channels);
+     return 0;
+--- wine/include/ksmedia.h.orig	2016-09-15 19:56:54.398846204 -0400
++++ wine/include/ksmedia.h	2016-09-15 18:40:30.146695112 -0400
+@@ -40,8 +40,7 @@
+ #define KSAUDIO_SPEAKER_5POINT1_SURROUND (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | SPEAKER_SIDE_LEFT | SPEAKER_SIDE_RIGHT)
+ #define KSAUDIO_SPEAKER_7POINT1 (KSAUDIO_SPEAKER_5POINT1 | SPEAKER_FRONT_LEFT_OF_CENTER | SPEAKER_FRONT_RIGHT_OF_CENTER)
+ /* 7:1 home theater 0x63F */
+-#define KSAUDIO_SPEAKER_7POINT1_SURROUND (KSAUDIO_SPEAKER_5POINT1 | SPEAKER_SIDE_LEFT | SPEAKER_SIDE_RIGHT)
+-
++#define KSAUDIO_SPEAKER_7POINT1_SURROUND (KSAUDIO_SPEAKER_5POINT1 | SPEAKER_SIDE_LEFT | SPEAKER_SIDE_RIGHT | SPEAKER_FRONT_LEFT_OF_CENTER | SPEAKER_FRONT_RIGHT_OF_CENTER | SPEAKER_BACK_CENTER | SPEAKER_TOP_CENTER | SPEAKER_TOP_FRONT_LEFT | SPEAKER_TOP_FRONT_CENTER | SPEAKER_TOP_FRONT_RIGHT | SPEAKER_TOP_BACK_LEFT | SPEAKER_TOP_BACK_CENTER | SPEAKER_TOP_BACK_RIGHT)
+ #ifndef REFERENCE_TIME_DEFINED
+ #define REFERENCE_TIME_DEFINED
+ typedef LONGLONG REFERENCE_TIME;
