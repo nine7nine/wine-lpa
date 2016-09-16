@@ -1,4 +1,4 @@
-This is a hack to allow 16 audio channel ouput in Wine... this can allow me to use Pulseaudio + jack-sink/source, routing 
+This is a hack to allow 16 audio channels in Wine... this can allow me to use Pulseaudio + jack-sink/source, routing 
 jackd applications in and out of wine. Obviously, you can do this with WineASIO and for most people WineASIO is the the 
 right choice. However, I'm experimenting with winepulse, thus far I'm getting some pretty good results! 
 
