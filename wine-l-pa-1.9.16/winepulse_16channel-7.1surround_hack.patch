@@ -1,9 +1,13 @@
 This is a hack to allow 16 audio channel ouput in Wine... this can allow me to use Pulseaudio + jack-sink/source, routing 
-jackd applications in and out of wine, without needing WineASIO. For example, I can route 16 channels from 
-Reaper (in Wine/winepulse driver) into Ardour5 (linux/jackd).
+jackd applications in and out of wine. Obviously, you can do this with WineASIO and for most people WineASIO is the the 
+right choice. However, I'm experimenting with winepulse, thus far I'm getting some pretty good results! 
 
-For this to work well, you have to be using a patched version of wine, like wine-staging/wine-rt. Pulseaudio also has to be 
-configured to handle this sort of application/usage. For the bare miniimum to have 16 channels exposed to pulseaudio/jack from wine; 
+For this to work well, you have to be using a patched version of wine, like wine-staging/wine-rt. Pulseaudio also 
+has to be configured to handle this sort of application/usage ~ which implies rt scheduling, minimal amount of latency, 
+disabling lfe-remixing, specifying the sample-rate and matching it with jackd settings, etc, etc. Unfortunately, 
+for now this isn't sort of undocumented.
+
+At the bare miniimum to have 16 channels exposed to pulseaudio/jack from wine; 
 
 Pulseaudio/jack must be configured correctly to use it in /etc/pulse/default.pa
 
@@ -15,7 +19,7 @@ load-module module-jack-source channels=16 channel_map=front-left,front-right,si
 
 load-module module-jack-sink channels=16 channel_map=front-left,front-right,side-left,side-right,rear-left,rear-right,lfe,front-center,top-center,rear-center,top-rear-left,top-rear-right,top-front-left,top-front-right,front-left-of-center,front-right-of-center
 
-Ideally, I'd like for wine/winepulse to be able to handle auxillary ports, rather athan abusing speaker_configurations 
+Ideally, I'd like for wine/winepulse to be able to handle auxillary ports, rather than abusing speaker_configurations 
 already present in wine, in order to get 16 channels of audio.
 
 --- wine/dlls/winepulse.drv/mmdevdrv.c.orig	2016-09-15 15:25:14.934709000 -0400
