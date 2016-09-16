@@ -1,6 +1,6 @@
 This is a hack to allow 16 audio channels in Wine... this can allow me to use Pulseaudio + jack-sink/source, routing 
-jackd applications in and out of wine. Obviously, you can do this with WineASIO and for most people WineASIO is the the 
-right choice. However, I'm experimenting with winepulse, thus far I'm getting some pretty good results! 
+jackd applications in and out of wine. Obviously, you can <and should!> do this with WineASIO and for most people WineASIO is 
+the **the right choice**. However, I'm experimenting with winepulse to see how it handles this situation.
 
 For this to work well, you have to be using a patched version of wine, like wine-staging/wine-rt. Pulseaudio also 
 has to be configured to handle this sort of application/usage ~ which implies rt scheduling, minimal amount of latency, 
