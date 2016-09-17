@@ -1,0 +1,27 @@
+--- wine-git/server/scheduler.c.orig	2016-09-17 17:02:08.556998535 -0400
++++ wine-git/server/scheduler.c	2016-09-17 17:02:30.864086944 -0400
+@@ -112,20 +112,24 @@
+     {
+         policy = SCHED_FIFO;
+         param.sched_priority = thread_base_priority + 4;
++        fprintf( stderr, "Thread %i at THREAD_PRIORITY_TIME_CRITICAL set to SCHED_FIFO - priority %i\n", thread->unix_tid, param.sched_priority );
+     }
+     else if (thread->priority >= THREAD_PRIORITY_HIGHEST)
+     {
+         policy = SCHED_FIFO;
+         param.sched_priority = thread_base_priority + 2;
++        fprintf( stderr, "Thread %i at THREAD_PRIORITY_HIGHEST set to SCHED_FIFO - priority %i\n", thread->unix_tid, param.sched_priority );
+     }
+     else if (thread->priority >= THREAD_PRIORITY_ABOVE_NORMAL)
+     {
+         policy = SCHED_FIFO;
+         param.sched_priority = thread_base_priority;
++        fprintf( stderr, "Thread %i at THREAD_PRIORITY_ABOVE_NORMAL set to SCHED_FIFO - priority %i\n", thread->unix_tid, param.sched_priority );
+     }
+     else if (thread->priority >= THREAD_PRIORITY_NORMAL)
+     {
+         policy = SCHED_OTHER;
++        fprintf( stderr, "Thread %i at THREAD_PRIORITY_NORMAL set to SCHED_OTHER - priority %i\n", thread->unix_tid, param.sched_priority );
+     }
+     else if (thread->priority >= THREAD_PRIORITY_LOWEST)
+     {

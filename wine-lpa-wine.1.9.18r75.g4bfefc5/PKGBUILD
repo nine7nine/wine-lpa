@@ -1,7 +1,8 @@
-# Maintainer: Daniel Bermond < yahoo-com: danielbermond >
+# Maintainer: Jordan Johnston < gmail.com: johnstonljordan >
+# Contributor: Daniel Bermond < yahoo-com: danielbermond >
 
 pkgname=wine-lpa
-pkgver=atest.release.r5.g2ad4a08+wine.1.9.18.r75.g4bfefc5
+pkgver=+wine.1.9.18.r75.g4bfefc5
 pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs (staging branch, Git version)"
 arch=('i686' 'x86_64')
@@ -174,7 +175,7 @@ sha256sums=('SKIP'
             'd05f8ea0dfe1210d00ac5e6233bae2c86626ee16ac7ff3aba880da056670c846'
             '49dd6fe17241b1425d055e81e610281b0b06648c589033331e217b48e1a17b83'
             '270f3671abf8390572242eb1ae553ae97672bab5aee9a84305e58e2e8c2a770b'
-            'a6ae636e2e85f9b5f6afb46937c1f2161de2418f1fa445140b0d6e7b6045400d'
+            '5ad70fd0c1a00658c326bec164d6817b9bb41a6cf27cfab125135322f140495f'
             'fd5020497b0e7316f33ba1480230fee0c557f23fd684bba5d5b68916151e2368'
             '437707f318119719af701bb0d762aa88f0ae9969474b78d1defbcb652b860bee'
             '6893bf70a838bd9cad855ca38c6b119e551cb81c3bd2d4054725b91082fddd1f'
@@ -187,7 +188,7 @@ sha256sums=('SKIP'
             '9b1dbbbe16500b82d67d4a033c4231357849804e2200d2ee1073802e1a98cbbd'
             'a3bd59d86006b88a19736676230edecffac99a8f4f4c40d3f6a969cb78ab6a55'
             '4660723ac00ab05e7a079c712cdea566b04ebdaec5044d60655c9730537bdebb'
-            '5c70b5d2ca41f1c7c9d3236ae4f56b8b863768989757fac210f9d688c36327ca'
+            '071f780fd8f2c95ff98f9e2c544589ec25dc4638b722a7dc861f66ec929b1934'
             '9901a5ee619f24662b241672a7358364617227937d5f6d3126f70528ee5111e7')
 
 if [ "$CARCH" = "i686" ]; then
@@ -217,7 +218,7 @@ pkgver() {
 	cd "${srcdir}"
 	
 	printf "%s+%s" \
-	    "$(cd wine-staging-git && git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | cut -c2-)" \
+	    "$(cd ${pkgname} && git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | cut -c2-)" \
 	    "$(cd wine-git   && git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g')"
 }
 
@@ -439,13 +440,13 @@ build() {
 
   msg "Applying Winepulse/ksmedia 16 audio channel hack"
   patch -s -Np1 -i $srcdir/winepulse_16channel-7.1surround_hack.patch
-
+  msg2 "         SUCCESS :)"
 
   msg "Applying msi_actions_hack.patch"
   patch -s -Np1 -i $srcdir/msi_actions_hack.patch
   msg2 "         SUCCESS :)"
 
-  msg "wine-rt_fprintf.patch"
+  msg "wine-rt_wine-rt_fprintf.patch"
   patch -s -Np1 -i $srcdir/wine-rt_fprintf.patch
   msg2 "         SUCCESS :)"
 
