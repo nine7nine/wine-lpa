@@ -1,0 +1,30 @@
+--- wine-git/include/winbase.h.orig	2016-09-16 14:41:28.909648927 -0400
++++ wine-git/include/winbase.h	2016-09-16 15:14:59.756270016 -0400
+@@ -1243,6 +1243,7 @@
+ #define THREAD_PRIORITY_ERROR_RETURN    (0x7fffffff)
+ #define THREAD_PRIORITY_TIME_CRITICAL   THREAD_BASE_PRIORITY_LOWRT
+ #define THREAD_PRIORITY_IDLE            THREAD_BASE_PRIORITY_IDLE
++#define hiTHREAD_PRIORITY_TIME_CRITICAL   65
+ 
+ /* flags to FormatMessage */
+ #define	FORMAT_MESSAGE_ALLOCATE_BUFFER	0x00000100
+
+--- wine-git/server/scheduler.c.orig	2016-09-16 14:21:33.597406883 -0400
++++ wine-git/server/scheduler.c	2016-09-16 14:24:52.467642801 -0400
+@@ -108,10 +108,15 @@
+     if (thread->unix_tid == -1) return;
+ 
+     memset( &param, 0, sizeof(param) );
++    if (thread->priority >= hiTHREAD_PRIORITY_TIME_CRITICAL)
++    {
++        policy = SCHED_FIFO;
++        param.sched_priority = thread_base_priority + 8;
++    }
+     if (thread->priority >= THREAD_PRIORITY_TIME_CRITICAL)
+     {
+         policy = SCHED_FIFO;
+-        param.sched_priority = thread_base_priority + 4;
++        param.sched_priority = thread_base_priority + 6;
+     }
+     else if (thread->priority >= THREAD_PRIORITY_HIGHEST)
+     {
