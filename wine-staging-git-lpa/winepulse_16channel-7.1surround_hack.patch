@@ -1,6 +1,7 @@
 This is a hack to allow 16 audio channel ouput in Wine... this can allow me to use Pulseaudio + jack-sink/source, routing 
 jackd applications in and out of wine, without needing WineASIO. For example, I can route 16 channels from 
-Reaper (in Wine/winepulse driver) into Ardour5 (linux/jackd).
+Reaper (in Wine/winepulse driver) into Ardour5 (linux/jackd). That all being siad; I highly recommend using WineASIO - it
+is much better suited for this task and *the right choice*. This is me experimenting with winepulse/pulseaudio.
 
 For this to work well, you have to be using a patched version of wine, like wine-staging/wine-rt. Pulseaudio also has to be 
 configured to handle this sort of application/usage. For the bare miniimum to have 16 channels exposed to pulseaudio/jack from wine; 
