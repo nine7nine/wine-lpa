@@ -2,7 +2,7 @@
 # Contributor: Daniel Bermond < yahoo-com: danielbermond >
 
 pkgname=wine-lpa
-pkgver=+wine.1.9.18.r75.g4bfefc5
+pkgver=atest.release.r5.g2ad4a08+wine.1.9.18.r75.g4bfefc5
 pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs (staging branch, Git version)"
 arch=('i686' 'x86_64')
@@ -218,7 +218,7 @@ pkgver() {
 	cd "${srcdir}"
 	
 	printf "%s+%s" \
-	    "$(cd ${pkgname} && git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | cut -c2-)" \
+	    "$(cd wine-staging-git && git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | cut -c2-)" \
 	    "$(cd wine-git   && git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g')"
 }
 
