@@ -1,7 +1,8 @@
-# Maintainer: Daniel Bermond < yahoo-com: danielbermond >
+# Maintainer: Jordan Johnston < gmail.com: johnstonljordan >
+# Contributor: Daniel Bermond < yahoo-com: danielbermond >
 
-pkgname=wine-staging-git
-pkgver=atest.release.r5.g2ad4a08+wine.1.9.18.r75.g4bfefc5
+pkgname=wine-lpa
+pkgver=+wine.1.9.18.r75.g4bfefc5
 pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs (staging branch, Git version)"
 arch=('i686' 'x86_64')
@@ -76,7 +77,7 @@ optdepends=(
 )
 options=('staticlibs')
 source=(wine-git::'git://source.winehq.org/git/wine.git'
-        "$pkgname"::'git+https://github.com/wine-compholio/wine-staging.git'
+        wine-staging-git::'git+https://github.com/wine-compholio/wine-staging.git'
         add-implementation-setProcessWorkingSetSize.patch
         NI-drag-and-drop.patch
         0050-pipe-check-and-thread-safe-read.patch
@@ -130,7 +131,7 @@ source=(wine-git::'git://source.winehq.org/git/wine.git'
         0023-mciseq-MCI_PLAY-does-not-reset-the-tempo-to-default.patch
         0024-mciseq-Read-the-tempo-from-the-file-when-opening-it.patch
         0025-mciseq-MCI-tempo-is-expressed-in-beats-per-minute.patch
-        wine-rt_scheduler_add.patch
+        wine-rt_fprintf.patch
         '30-win32-aliases.conf')
 sha256sums=('SKIP'
             'SKIP'
@@ -144,7 +145,7 @@ sha256sums=('SKIP'
             '4c2e67523d15103c9e4a328080f5d535024cb43df6c5278fd276fada886a39e3'
             'b8b78bf216dfdeeb6530b59058526706231b5eff887a505a122e517228606083'
             'fb03d18bc01a90ac6cad46b74ad6add0a39fb9a033dabd602c7911acaa59510e'
-            '2d43492ba163e072dbc1bafeadeef439c3d98a57b4dfd910410689c8820d0761'
+            'acaf30b3c16fe209b328626ac148a0cf16ef2893ff3dba76ca2ba21c16017e21'
             '824f4b8e91981e0222880084d7fab775d2038b5ec33c5f368e341604076572c3'
             '18c41a3785d4dc8f56cc828ba112926b16323fbc64168c6f01f852725cb42800'
             'b920ad00c4c6dae89877d7aeaded1eb830393e65002dcdc52cd0f2b5a9f94291'
@@ -159,10 +160,10 @@ sha256sums=('SKIP'
             'a1d1faab588716a5dd6e2fa8fc54e121808551c94c6622340ed259fbca52ee8f'
             '5978f12bf4522f07033dd4667d44c587052ff1eb8d1c0a6f93a35d4c54169cc2'
             'ea24318d8b5b9ea307697130b21c6a0bc60ca57e419c3ee5c65f7466719f0cb7'
-            'e127483434027b5c322078ee8e5a8217dc6a5aef2f84c5bb36f464ec49f045c4'
+            '4407343d6f1683bf51e4a6e1c6cb40d5b468b90cd04436897e9152ba2f1071cc'
             'dcf2275173c795468cfc147f87172df1131e18ab26bd4315e22beda241993489'
             '5dd6915d4f086eeb80c4eee1de386d9dcba259e1b936fdca096a4b75879497fa'
-            '303e7ac6fd2797e137e4c91cb07e1389be6acfd98eb63a25f03556aa67833f35'
+            '5fb19ba7090200cca921f9f886d43e04af2e7564e6cbbebb6dc22ceaa9826624'
             'd0022fae9eb78701a58e49e0d616778191064207d38bfdd3f9506d63b7ee8e03'
             '953a6a2a70a85bd88a3ed0dc15f40b1698352c42bcfc56819e9df1b8d91c9851'
             '5c6823fbc737b2804bd5e62111936d3b90332d33f346b0c898ee319213352f96'
@@ -174,7 +175,7 @@ sha256sums=('SKIP'
             'd05f8ea0dfe1210d00ac5e6233bae2c86626ee16ac7ff3aba880da056670c846'
             '49dd6fe17241b1425d055e81e610281b0b06648c589033331e217b48e1a17b83'
             '270f3671abf8390572242eb1ae553ae97672bab5aee9a84305e58e2e8c2a770b'
-            'a6ae636e2e85f9b5f6afb46937c1f2161de2418f1fa445140b0d6e7b6045400d'
+            '5ad70fd0c1a00658c326bec164d6817b9bb41a6cf27cfab125135322f140495f'
             'fd5020497b0e7316f33ba1480230fee0c557f23fd684bba5d5b68916151e2368'
             '437707f318119719af701bb0d762aa88f0ae9969474b78d1defbcb652b860bee'
             '6893bf70a838bd9cad855ca38c6b119e551cb81c3bd2d4054725b91082fddd1f'
@@ -187,7 +188,7 @@ sha256sums=('SKIP'
             '9b1dbbbe16500b82d67d4a033c4231357849804e2200d2ee1073802e1a98cbbd'
             'a3bd59d86006b88a19736676230edecffac99a8f4f4c40d3f6a969cb78ab6a55'
             '4660723ac00ab05e7a079c712cdea566b04ebdaec5044d60655c9730537bdebb'
-            '5c70b5d2ca41f1c7c9d3236ae4f56b8b863768989757fac210f9d688c36327ca'
+            '071f780fd8f2c95ff98f9e2c544589ec25dc4638b722a7dc861f66ec929b1934'
             '9901a5ee619f24662b241672a7358364617227937d5f6d3126f70528ee5111e7')
 
 if [ "$CARCH" = "i686" ]; then
@@ -210,7 +211,7 @@ else
 	          "wine-staging=$(echo ${pkgver} | grep -o '.*+' | sed 's/.\{1\}$//')"
 	          'wine-git'
 	          )
-	conflicts=('wine' 'wine-wow64' 'wine-staging' 'wine-git')
+	conflicts=('wine' 'wine-wow64' 'wine-staging' 'wine-git' wine-staging-git)
 fi
 
 pkgver() {
@@ -233,19 +234,19 @@ prepare() {
 	git clean -d -x -f         # Delete untracked files
 
 	# Change back to the wine upstream commit that this version of wine-staging is based in
-	git checkout $(../"$pkgname"/patches/patchinstall.sh --upstream-commit)
+	git checkout $(../wine-staging-git/patches/patchinstall.sh --upstream-commit)
 }
 
 build() {
 	cd "${srcdir}"
 	
 	# Delete old build dirs (from previous builds) and make new ones
-	rm --recursive --force "$pkgname"-{32,64}-build
-	mkdir --parents "$pkgname"-32-build
+	rm --recursive --force wine-staging-git-{32,64}-build
+	mkdir --parents wine-staging-git-32-build
 	
 	# Apply all wine-staging patches
 	msg2 "Applying wine-staging patches..."
-	./"$pkgname"/patches/patchinstall.sh DESTDIR="${srcdir}/wine-git" --all
+	./wine-staging-git/patches/patchinstall.sh DESTDIR="${srcdir}/wine-git" --all
 
         # wine-lpa
 
@@ -273,10 +274,6 @@ build() {
 
 #############################################################################
 
-#  msg "Applying 0001-mmdevapi-Prevent-race-condition-upon-Start.patch"
-#  patch -s -Np1 -i $srcdir/0001-mmdevapi-Prevent-race-condition-upon-Start.patch
-#  msg2 "         SUCCESS :)"
-
   msg "Applying 0007-mciseq-Prevent-busy-wait-while-pausing.patch"
   patch -s -Np1 -i $srcdir/0007-mciseq-Prevent-busy-wait-while-pausing.patch
   msg2 "         SUCCESS :)"
@@ -293,9 +290,9 @@ build() {
   patch -s -Np1 -i $srcdir/0010-mciseq-Limit-concurrency-when-starting-to-play.patch
   msg2 "         SUCCESS :)"
 
-#  msg "Applying 0012-mciseq-Play-returns-the-error-code-from-midiOutOpen.patch"
-#  patch -s -Np1 -i $srcdir/0012-mciseq-Play-returns-the-error-code-from-midiOutOpen.patch
-#  msg2 "        SUCCESS :)"
+  msg "Applying 0012-mciseq-Play-returns-the-error-code-from-midiOutOpen.patch"
+  patch -s -Np1 -i $srcdir/0012-mciseq-Play-returns-the-error-code-from-midiOutOpen.patch
+  msg2 "        SUCCESS :)"
 
   msg "Applying 0020-mciseq-Check-stop-condition-after-sleeping.patch"
   patch -s -Np1 -i $srcdir/0020-mciseq-Check-stop-condition-after-sleeping.patch
@@ -347,9 +344,9 @@ build() {
   patch -s -Np1 -i $srcdir/If-a-child-of-the-window-being-disabled-is-the-captu.patch
   msg2 "         SUCCESS :)"
 
-#  msg "Applying hack-for-Ivory-Library-Installer-force-GENERIC_xxx.patch"
-#  patch -s -Np1 -i $srcdir/hack-for-Ivory-Library-Installer-force-GENERIC_xxx.patch
-#  msg "        SUCCESS :)"
+  msg "Applying hack-for-Ivory-Library-Installer-force-GENERIC_xxx.patch"
+  patch -s -Np1 -i $srcdir/hack-for-Ivory-Library-Installer-force-GENERIC_xxx.patch
+  msg "        SUCCESS :)"
 
   msg "Applying kernel32_path.patch"
   patch -s -Np1 -i $srcdir/kernel32_path.patch
@@ -377,17 +374,17 @@ build() {
   patch -s -Np1 -i $srcdir/add-implementation-setProcessWorkingSetSize.patch
   msg2 "         SUCCESS :)"
 
-#  msg "Applying setidealcpu_wine.patch"
-#  patch -s -Np1 -i $srcdir/setidealcpu_wine.patch
-#  msg2 "         SUCCESS :)"
+  msg "Applying setidealcpu_wine.patch"
+  patch -s -Np1 -i $srcdir/setidealcpu_wine.patch
+  msg2 "         SUCCESS :)"
 
 #  msg "Applying 0001-ntdll-Implement-NtQuerySystemInformation-class-0x37.patch"
 #  patch -s -Np1 -i $srcdir/0001-ntdll-Implement-NtQuerySystemInformation-class-0x37.patch
 #  msg2 "         SUCCESS :)"
 
-#  msg "Applying shush_DnDhelper.patch"
-#  patch -s -Np1 -i $srcdir/shush_DnDhelper.patch
-#  msg2 "         SUCCESS :)"
+  msg "Applying shush_DnDhelper.patch"
+  patch -s -Np1 -i $srcdir/shush_DnDhelper.patch
+  msg2 "         SUCCESS :)"
 
   msg "Applying 0B-msi_check_return_value_of_ITypeLib_GetLibAttr.patch"
   patch -s -Np1 -i $srcdir/0B-msi_check_return_value_of_ITypeLib_GetLibAttr.patch
@@ -409,9 +406,9 @@ build() {
   patch -s -Np1 -i $srcdir/threadLSPointer.patch
   msg2 "         SUCCESS :)"
 
-#  msg "Applying shush_gdi_noHDC.patch"
-#  patch -s -Np1 -i $srcdir/shush_gdi_noHDC.patch
-#  msg2 "         SUCCESS :)"
+  msg "Applying shush_gdi_noHDC.patch"
+  patch -s -Np1 -i $srcdir/shush_gdi_noHDC.patch
+  msg2 "         SUCCESS :)"
 
   msg "Applying Fix_u-he_plugins-win32_find_data_nogui.patch"
   patch -s -Np1 -i $srcdir/Fix_u-he_plugins-win32_find_data_nogui.patch
@@ -439,15 +436,15 @@ build() {
 
   msg "Applying Winepulse/ksmedia 16 audio channel hack"
   patch -s -Np1 -i $srcdir/winepulse_16channel-7.1surround_hack.patch
-
+  msg2 "         SUCCESS :)"
 
   msg "Applying msi_actions_hack.patch"
   patch -s -Np1 -i $srcdir/msi_actions_hack.patch
   msg2 "         SUCCESS :)"
 
-#  msg "wine-rt_scheduler_add.patch"
-#  patch -s -Np1 -i $srcdir/wine-rt_scheduler_add.patch
-#  msg2 "         SUCCESS :)"
+  msg "wine-rt_wine-rt_fprintf.patch"
+  patch -s -Np1 -i $srcdir/wine-rt_fprintf.patch
+  msg2 "         SUCCESS :)"
 
         cd "${srcdir}"	
 	
@@ -457,8 +454,8 @@ build() {
 	if [ "$CARCH" = "x86_64" ]; then
 	    msg2 "Building Wine-64..."
 	    
-	    mkdir --parents "$pkgname"-64-build
-	    cd  "$pkgname"-64-build
+	    mkdir --parents wine-staging-git-64-build
+	    cd  wine-staging-git-64-build
 	    
 	    ../wine-git/configure \
 	                    --prefix=/usr \
@@ -472,7 +469,7 @@ build() {
 	    
 	    _wine32opts=(
 	            --libdir=/usr/lib32
-	            --with-wine64="${srcdir}/${pkgname}-64-build"
+	            --with-wine64="${srcdir}/wine-staging-git-64-build"
 	            )
 	    
 	    export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
@@ -484,7 +481,7 @@ build() {
 	
 	msg2 "Building Wine-32..."
 	
-	cd "$srcdir"/"$pkgname"-32-build
+	cd "$srcdir"/wine-staging-git-32-build
 	
 	../wine-git/configure \
 	                --prefix=/usr \
@@ -505,7 +502,7 @@ package() {
 	
 	msg2 "Packaging Wine-32..."
 	
-	cd "$srcdir"/"$pkgname"-32-build
+	cd "$srcdir"/wine-staging-git-32-build
 	
 	if [ "$CARCH" = "i686" ]; then
 	
@@ -522,7 +519,7 @@ package() {
 	    
 	    msg2 "Packaging Wine-64..."
 	    
-	    cd "$srcdir"/"$pkgname"-64-build
+	    cd "$srcdir"/wine-staging-git-64-build
 	    
 	    make prefix="${pkgdir}/usr" \
 	         libdir="${pkgdir}/usr/lib" \
